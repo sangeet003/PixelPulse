@@ -52,7 +52,6 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        'matt-clack': '#1b1b1b',
       },
       borderRadius: {
         lg: "var(--radius)",

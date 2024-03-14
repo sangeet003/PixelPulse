@@ -10,7 +10,7 @@ const Sidebar = () => {
 
   const pathname = usePathname();
   return (
-    <div className="w-1/6 h-lvh flex size-full flex-col" style={{backgroundColor:"#171717"}}>
+    <div className="w-[18%] h-lvh flex size-full flex-col" style={{backgroundColor:"#171717", position: "fixed", top: 0, left: 0}}>
 
       <div className='flex my-5 ms-5'>
         <Image 

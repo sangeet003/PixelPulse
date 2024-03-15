@@ -42,7 +42,7 @@ const MediaUploader = ({
   };
 
   return (
-    <div className="mb-4">
+    <div className="mb-4 pe-4">
       <h3 className="text-xl font-bold text-gray-200 my-4">Original</h3>
       <CldUploadWidget
         uploadPreset="pixel_pulse"

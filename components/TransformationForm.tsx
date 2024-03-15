@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { ArrayKeys, z } from "zod";
+import { ArrayKeys, object, z } from "zod";
 import {
   aspectRatioOptions,
   creditFee,
@@ -24,6 +24,8 @@ import {
 import MediaUploader from "./MediaUploader";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
+import TransformedImage from "./TransformedImage";
+import { AspectRatioKey, debounce, deepMergeObjects } from "@/lib/utils";
 
 export const formSchema = z.object({
   title: z.string(),
@@ -33,7 +35,12 @@ export const formSchema = z.object({
   publicId: z.string(),
 });
 
-const TransformationForm = ({ action, data = null, type }: any) => {
+const TransformationForm = ({
+  action,
+  data = null,
+  type,
+  config = null,
+}: TransformationFormProps) => {
   const initialValues =
     data && action === "Update"
       ? {
@@ -50,9 +57,75 @@ const TransformationForm = ({ action, data = null, type }: any) => {
     defaultValues: initialValues,
   });
 
-  const [image, setImage] = useState(data);
+  const transformationType = transformationTypes[type];
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {}
+  const [image, setImage] = useState(data);
+  const [isTransforming, setIsTransforming] = useState(false);
+  const [transformationConfig, setTransformationConfig] = useState(config);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [newTransformation, setNewTransformation] =
+    useState<Transformations | null>(null);
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+
+  }
+
+  const onSelectFieldHandler = (
+    value: string,
+    onChangeField: (value: string) => void
+  ) => {
+    const imageSize = aspectRatioOptions[value as AspectRatioKey];
+
+    setImage((prevState: any) => ({
+      ...prevState,
+      aspectRatio: imageSize.aspectRatio,
+      width: imageSize.width,
+      height: imageSize.height,
+    }));
+
+    setNewTransformation(transformationType.config);
+
+    return onChangeField(value);
+  }
+
+  const onInputChangeHandler = (
+    fieldName: string,
+    value: string,
+    type: string,
+    onChangeField: (value: string) => void
+  ) => {
+    debounce(() => {
+      setNewTransformation((prevState: any) => ({
+        ...prevState,
+        [type]: {
+          ...prevState?.[type],
+          [fieldName === "prompt" ? "prompt" : "to"]: value,
+        },
+      }));
+    }, 1000)();
+
+    return onChangeField(value);
+  }
+
+  const onTransformHandler = async () => {
+    setIsTransforming(true)
+
+    setTransformationConfig(
+      deepMergeObjects(newTransformation, transformationConfig)
+    )
+
+    setNewTransformation(null)
+
+    // startTransition(async () => {
+    //   await updateCredits(userId, creditFee)
+    // })
+  }
+
+  useEffect(() => {
+    if(image && (type === 'restore' || type === 'removeBackground')) {
+      setNewTransformation(transformationType.config)
+    }
+  }, [image, transformationType.config, type])
 
   return (
     <Form {...form}>
@@ -73,7 +146,9 @@ const TransformationForm = ({ action, data = null, type }: any) => {
             className="w-full mt-4"
             render={({ field }) => (
               <Select
-                //onValueChange={(value) => onSelectFieldHandler(value, field.onChange)}
+                onValueChange={(value) =>
+                  onSelectFieldHandler(value, field.onChange)
+                }
                 value={field.value}
               >
                 <SelectTrigger className="select-field">
@@ -104,12 +179,14 @@ const TransformationForm = ({ action, data = null, type }: any) => {
                 <Input
                   value={field.value}
                   className="input-field"
-                  // onChange={(e) => onInputChangeHandler(
-                  //     'prompt',
-                  //     e.target.value,
-                  //     type,
-                  //     field.onChange
-                  // )}
+                  onChange={(e) =>
+                    onInputChangeHandler(
+                      "prompt",
+                      e.target.value,
+                      type,
+                      field.onChange
+                    )
+                  }
                 />
               )}
             />
@@ -124,12 +201,14 @@ const TransformationForm = ({ action, data = null, type }: any) => {
                   <Input
                     value={field.value}
                     className="input-field"
-                    // onChange={(e) => onInputChangeHandler(
-                    // 'color',
-                    // e.target.value,
-                    // 'recolor',
-                    // field.onChange
-                    // )}
+                    onChange={(e) =>
+                      onInputChangeHandler(
+                        "color",
+                        e.target.value,
+                        "recolor",
+                        field.onChange
+                      )
+                    }
                   />
                 )}
               />
@@ -138,39 +217,46 @@ const TransformationForm = ({ action, data = null, type }: any) => {
         )}
 
         <div className="grid grid-cols-2 my-5">
-            <CustomField
-              control={form.control}
-              name="publicId"
-              className="flex size-full flex-col"
-              render={({ field }) => (
-                <MediaUploader
-                  onValueChange={field.onChange}
-                  setImage={setImage}
-                  publicId={field.value}
-                  image={image}
-                  type={type}
-                />
-              )}
-            />
+          <CustomField
+            control={form.control}
+            name="publicId"
+            className="flex size-full flex-col"
+            render={({ field }) => (
+              <MediaUploader
+                onValueChange={field.onChange}
+                setImage={setImage}
+                publicId={field.value}
+                image={image}
+                type={type}
+              />
+            )}
+          />
+
+          <TransformedImage
+            image={image}
+            type={type}
+            title={form.getValues().title}
+            isTransforming={isTransforming}
+            setIsTransforming={setIsTransforming}
+            transformationConfig={transformationConfig}
+          />
         </div>
 
         <div className="flex flex-col gap-4">
           <Button
             type="button"
             className="submit-button capitalize"
-            //disabled={isTransforming || newTransformation === null}
-            //onClick={onTransformHandler}
+            disabled={isTransforming || newTransformation === null}
+            onClick={onTransformHandler}
           >
-            {"Apply Transformation"}
-            {/* {isTransforming ? "Transforming..." : "Apply Transformation"} */}
+            {isTransforming ? "Transforming..." : "Apply Transformation"}
           </Button>
           <Button
-            //type="submit"
+            type="submit"
             className="submit-button capitalize"
-            //disabled={isSubmitting}
+            disabled={isSubmitting}
           >
-            {"Save Image"}
-            {/* {isSubmitting ? "Submitting..." : "Save Image"} */}
+            {isSubmitting ? "Submitting..." : "Save Image"}
           </Button>
         </div>
       </form>

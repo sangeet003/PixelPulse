@@ -25,7 +25,7 @@ const CreditPage = () => {
         <ul className="grid grid-cols-3 gap-12 mt-6 py-8 px-14">
           {plans.map((plan) => (
             <li>
-              <Card className="object-center rounded-lg ">
+              <Card className="object-center rounded-lg  bg-slate-100">
                 <CardHeader className="m-2 text-center">
                   <Image
                     className="self-center m-2"

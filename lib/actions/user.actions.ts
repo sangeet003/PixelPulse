@@ -19,22 +19,3 @@ export async function getUserByEmail(email: string) {
     }
 }
 
-export async function getUserEmail(request : NextRequest) {
-    try {
-      await connectToDatabase();
-
-      const token = (request.cookies.get("token"));
-
-      if (!token) {
-        return NextResponse.json({ error: "Token not found" }, { status: 400 });
-      }
-
-      const decodedToken = jwt.verify(token.value, process.env.TOKEN_SECRET!); 
-      const email = (decodedToken as any).email;
-  
-      return JSON.parse(JSON.stringify(email));
-    } catch (error) {
-      console.log(error);
-    }
-}
-

@@ -23,7 +23,7 @@ declare type Transformations = {
 
   declare type TransformationFormProps = {
     action: "Add" | "Update";
-    userId: string;
+    userEmail: string;
     type: TransformationTypeKey;
     creditBalance: number;
     data?: IImage | null;
@@ -38,4 +38,41 @@ declare type Transformations = {
     isTransforming: boolean;
     hasDownload?: boolean;
     setIsTransforming?: React.Dispatch<React.SetStateAction<boolean>>;
+  };
+
+  declare type AddImageParams = {
+    image: {
+      title: string;
+      publicId: string;
+      transformationType: string;
+      width: number;
+      height: number;
+      config: any;
+      secureURL: string;
+      transformationURL: string;
+      aspectRatio: string | undefined;
+      prompt: string | undefined;
+      color: string | undefined;
+    };
+    userEmail: string;
+    path: string;
+  };
+
+  declare type UpdateImageParams = {
+    image: {
+      _id: string;
+      title: string;
+      publicId: string;
+      transformationType: string;
+      width: number;
+      height: number;
+      config: any;
+      secureURL: string;
+      transformationURL: string;
+      aspectRatio: string | undefined;
+      prompt: string | undefined;
+      color: string | undefined;
+    };
+    userEmail: string;
+    path: string;
   };

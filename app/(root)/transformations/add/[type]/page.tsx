@@ -1,10 +1,10 @@
 "use client"
 
 import Header from '@/components/Header'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {transformationTypes} from "../../../../../constants/index"
 import TransformationForm from '@/components/TransformationForm';
-import { getUserEmail } from '@/lib/actions/user.actions';
+import axios from 'axios';
 
 declare type TransformationTypeKey =
   | "restore"
@@ -21,11 +21,19 @@ declare type SearchParamProps = {
 
 const AddTransformationTypePage = ({ params : {type}} : SearchParamProps) => {
 
-  //const userEmail = getUserEmail();
+  const [email, setEmail] = useState("");
 
-  const userEmail = "ayaam@example.com";
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axios.get("/api/user");
+      setEmail(response.data.email);
+      console.log(response.data.email);
+    }
+    fetchData();
+  }, []);
 
   const transformation = transformationTypes[type];
+
   return (
     <>
       <Header 
@@ -33,11 +41,14 @@ const AddTransformationTypePage = ({ params : {type}} : SearchParamProps) => {
         subTitle={transformation.subTitle}
       />
 
-      <TransformationForm 
-        action="Add"
-        className="mt-8"
-        type = {transformation.type}
-      />
+      <div className="mt-8">
+        <TransformationForm 
+          action="Add"
+          userEmail = {email}
+          type = {transformation.type as TransformationTypeKey}
+          creditBalance={10}
+        />
+      </div>
     </>
   )
 }

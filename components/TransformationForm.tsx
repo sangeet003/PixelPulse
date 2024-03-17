@@ -26,6 +26,9 @@ import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import TransformedImage from "./TransformedImage";
 import { AspectRatioKey, debounce, deepMergeObjects } from "@/lib/utils";
+import { getCldImageUrl } from "next-cloudinary";
+import { addImage, updateImage } from "@/lib/actions/image.actions";
+import { useRouter } from "next/navigation";
 
 export const formSchema = z.object({
   title: z.string(),
@@ -38,8 +41,10 @@ export const formSchema = z.object({
 const TransformationForm = ({
   action,
   data = null,
+  userEmail,
   type,
   config = null,
+  creditBalance
 }: TransformationFormProps) => {
   const initialValues =
     data && action === "Update"
@@ -66,9 +71,73 @@ const TransformationForm = ({
   const [newTransformation, setNewTransformation] =
     useState<Transformations | null>(null);
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  const router = useRouter();
 
-  }
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setIsSubmitting(true);
+
+    if (data || image) {
+      const transformationUrl = getCldImageUrl({
+        width: image?.width,
+        height: image?.height,
+        src: image?.publicId,
+        ...transformationConfig,
+      });
+
+      const imageData = {
+        title: values.title,
+        publicId: image?.publicId,
+        transformationType: type,
+        width: image?.width,
+        height: image?.height,
+        config: transformationConfig,
+        secureURL: image?.secureURL,
+        transformationURL: transformationUrl,
+        aspectRatio: values.aspectRatio,
+        prompt: values.prompt,
+        color: values.color,
+      };
+
+      if (action === "Add") {
+        try {
+          const newImage = await addImage({
+            image: imageData,
+            userEmail,
+            path: "/",
+          });
+
+          if (newImage) {
+            form.reset();
+            setImage(data);
+            router.push(`/transformations/${newImage._id}`);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
+      if (action === "Update") {
+        try {
+          const updatedImage = await updateImage({
+            image: {
+              ...imageData,
+              _id: data._id,
+            },
+            userEmail,
+            path: `/transformations/${data._id}`,
+          });
+
+          if (updatedImage) {
+            router.push(`/transformations/${updatedImage._id}`);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    }
+
+    setIsSubmitting(false);
+  };
 
   const onSelectFieldHandler = (
     value: string,
@@ -86,7 +155,7 @@ const TransformationForm = ({
     setNewTransformation(transformationType.config);
 
     return onChangeField(value);
-  }
+  };
 
   const onInputChangeHandler = (
     fieldName: string,
@@ -105,27 +174,27 @@ const TransformationForm = ({
     }, 1000)();
 
     return onChangeField(value);
-  }
+  };
 
   const onTransformHandler = async () => {
-    setIsTransforming(true)
+    setIsTransforming(true);
 
     setTransformationConfig(
       deepMergeObjects(newTransformation, transformationConfig)
-    )
+    );
 
-    setNewTransformation(null)
+    setNewTransformation(null);
 
     // startTransition(async () => {
     //   await updateCredits(userId, creditFee)
     // })
-  }
+  };
 
   useEffect(() => {
-    if(image && (type === 'restore' || type === 'removeBackground')) {
-      setNewTransformation(transformationType.config)
+    if (image && (type === "restore" || type === "removeBackground")) {
+      setNewTransformation(transformationType.config);
     }
-  }, [image, transformationType.config, type])
+  }, [image, transformationType.config, type]);
 
   return (
     <Form {...form}>

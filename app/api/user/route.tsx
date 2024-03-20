@@ -7,7 +7,7 @@ import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 
 export async function GET(request : NextRequest) {
-
+    await connectToDatabase();
     try {
         const token = (request.cookies.get("token"));
 
@@ -18,10 +18,17 @@ export async function GET(request : NextRequest) {
         const decodedToken = jwt.verify(token.value, process.env.TOKEN_SECRET!); 
         const email = (decodedToken as any).email;
 
+        const user = await User.findOne({email : email});
+
+        if(!user)
+        {
+            return NextResponse.json({error : "User doesn't Exists"}, {status : 400});
+        }
+
         return NextResponse.json({
-            message : "User Deleted Successfully",
+            message: "User fetched successfully",
             success : true,
-            email
+            user
         })
         
     } catch (error : any) {

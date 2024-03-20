@@ -13,21 +13,17 @@ declare type TransformationTypeKey =
   | "recolor"
   | "removeBackground";
 
-
-declare type SearchParamProps = {
-  params: { id: string; type: TransformationTypeKey };
-  searchParams: { [key: string]: string | string[] | undefined };
-};
-
 const AddTransformationTypePage = ({ params : {type}} : SearchParamProps) => {
 
-  const [email, setEmail] = useState("");
+  const [user, setUser] = useState({
+    email : "",
+    creditBalance : 10,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
       const response = await axios.get("/api/user");
-      setEmail(response.data.email);
-      console.log(response.data.email);
+      setUser(response.data.user);
     }
     fetchData();
   }, []);
@@ -44,9 +40,9 @@ const AddTransformationTypePage = ({ params : {type}} : SearchParamProps) => {
       <div className="mt-8">
         <TransformationForm 
           action="Add"
-          userEmail = {email}
+          userEmail = {user.email}
           type = {transformation.type as TransformationTypeKey}
-          creditBalance={10}
+          creditBalance={user.creditBalance}
         />
       </div>
     </>

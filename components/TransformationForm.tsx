@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { ArrayKeys, object, z } from "zod";
@@ -29,6 +29,8 @@ import { AspectRatioKey, debounce, deepMergeObjects } from "@/lib/utils";
 import { getCldImageUrl } from "next-cloudinary";
 import { addImage, updateImage } from "@/lib/actions/image.actions";
 import { useRouter } from "next/navigation";
+import { updateCredits } from "@/lib/actions/user.actions";
+import { InsufficientCreditsModal } from "./InsufficientCreditsModal";
 
 export const formSchema = z.object({
   title: z.string(),
@@ -70,6 +72,7 @@ const TransformationForm = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [newTransformation, setNewTransformation] =
     useState<Transformations | null>(null);
+  const [isPending, startTransition] = useTransition()
 
   const router = useRouter();
 
@@ -185,9 +188,11 @@ const TransformationForm = ({
 
     setNewTransformation(null);
 
-    // startTransition(async () => {
-    //   await updateCredits(userId, creditFee)
-    // })
+    startTransition(async () => {
+      console.log("set trans");
+      console.log(userEmail);
+      await updateCredits(userEmail, creditFee)
+    })
   };
 
   useEffect(() => {
@@ -199,6 +204,7 @@ const TransformationForm = ({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="my-8">
+        {creditBalance < Math.abs(creditFee) && <InsufficientCreditsModal />}
         <CustomField
           control={form.control}
           name="title"

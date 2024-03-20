@@ -1,13 +1,27 @@
-"use client"
+import { Collection } from "@/components/Collection"
+import { navLinks } from "@/constants"
+import { getAllImages } from "@/lib/actions/image.actions"
+import Image from "next/image"
+import Link from "next/link"
 
-import MediaUploader from "@/components/MediaUploader";
+const Home = async ({ searchParams }: SearchParamProps) => {
+  const page = Number(searchParams?.page) || 1;
+  const searchQuery = (searchParams?.query as string) || '';
 
-export default function Home() {
+  const images = await getAllImages({ page, searchQuery})
 
   return (
-    <div className="flex"> 
-      <div className="mx-5 ms-20">
-      </div>
-    </div>
-  );
+    <>
+      <section className="sm:mt-12">
+        <Collection 
+          hasSearch={true}
+          images={images?.data}
+          totalPages={images?.totalPage}
+          page={page}
+        />
+      </section>
+    </>
+  )
 }
+
+export default Home

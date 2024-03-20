@@ -1,3 +1,5 @@
+"use client"
+
 import { dataUrl, debounce, getImageSize } from "@/lib/utils";
 import { CldImage } from "next-cloudinary";
 import { PlaceholderValue } from "next/dist/shared/lib/get-img-props";
@@ -37,8 +39,12 @@ const TransformedImage = ({
               }}
               {...transformationConfig}
             />
-
-            {isTransforming && (
+          </div>
+        </>
+      ) : (
+        <div className="media-uploader_cta">
+          Transformed Image
+          {/* {isTransforming && (
               <div className="transforming-loader">
                 <Image
                   src="/assets/icons/spinner.svg"
@@ -48,11 +54,9 @@ const TransformedImage = ({
                 />
                 <p className="text-white/80">Please wait...</p>
               </div>
-            )}
-          </div>
-        </>
-      ) : (
-        <div className="media-uploader_cta">Transformed Image</div>
+            )} */}
+        </div>
+        
       )}
     </div>
   );

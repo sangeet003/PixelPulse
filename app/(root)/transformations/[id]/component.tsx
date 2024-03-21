@@ -15,7 +15,7 @@ import axios from "axios";
 const ImageDetails = ({user, image} : any) => {
   
 
-  console.log(image)
+  //console.log(image)
   return (
     <>
       <Header title={image.title} subTitle=""/>

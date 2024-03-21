@@ -41,7 +41,7 @@ const data = ({ params: { id } }: SearchParamProps) => {
         fetchData();
       }, []);
 
-    console.log(image)
+    //console.log(image)
     return (
         <ImageDetails
             user= {user}

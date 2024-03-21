@@ -133,3 +133,15 @@
 .transformation-original_image {
   @apply h-fit min-h-72 w-full rounded-[10px] border border-dashed bg-purple-100/20 object-cover p-2;
 }
+
+.profile {
+  @apply mt-5 flex flex-col gap-5 sm:flex-row md:mt-8 md:gap-10;
+}
+
+.profile-balance {
+  @apply w-full rounded-[16px] border-2 p-5 md:px-6 md:py-8;
+}
+
+.profile-image-manipulation {
+  @apply w-full rounded-[16px] border-2 p-5 md:px-6 md:py-8;
+}

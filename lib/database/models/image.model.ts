@@ -21,6 +21,11 @@ export interface IImage extends Document {
     updatedAt?: Date;
   }
 
+  export interface UImage {
+    data : IImage[],
+    totalPages : number
+  }
+
 const ImageSchema = new Schema({
 
     title: { type: String, required: true },

@@ -1,13 +1,16 @@
 "use client";
 
-import { CustomField } from "@/components/CustomField";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import React from "react";
-import { Form } from "@/components/ui/form";
+import React, { useEffect, useState } from "react";
+import Header from "@/components/Header";
+import Image from "next/image";
+import { Collection } from "@/components/Collection";
 
-const ProfilePage = () => {
+
+const ProfilePage = ({ searchParams }: SearchParamProps) => {
+  const page = Number(searchParams?.page) || 1;
   const router = useRouter();
 
   const logoutHandler = async (e: any) => {
@@ -20,26 +23,70 @@ const ProfilePage = () => {
     router.push("/login");
   };
 
+  const [user, setUser] = useState({} as any);
+
+  const [images, setImages] = useState([] as any);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      let response = await axios.post("/api/user/images", page);
+      setUser(response.data.user);
+      setImages(response.data.images);
+    };
+    fetchData();
+  }, [setUser]);
+  
   return (
     <>
-      <Button className="m-2" onClick={logoutHandler}>
-        Logout
-      </Button>
-      <Button className="m-2" onClick={deleteHandler}>
-        Delete
-      </Button>
+      <Header title="Profile" subTitle="" />
 
-      {/* <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="my-8">
-          <CustomField
-            control={form.control}
-            name="title"
-            formLabel="Image Title"
-            className="w-full"
-            render={({ field }) => <Input {...field} className="input-field" />}
-          />
-        </form>
-      </Form> */}
+      <section className="profile">
+        <div className="profile-balance">
+          <p className="p-14-medium md:p-16-medium">CREDITS AVAILABLE</p>
+          <div className="mt-4 flex items-center gap-4">
+            <Image
+              src="/assets/icons/coins.svg"
+              alt="coins"
+              width={50}
+              height={50}
+              className="size-9 md:size-12"
+            />
+            <h2 className="h2-bold text-dark-600">{user?.creditBalance}</h2>
+          </div>
+        </div>
+
+        <div className="profile-image-manipulation">
+          <p className="p-14-medium md:p-16-medium">IMAGE MANIPULATION DONE</p>
+          <div className="mt-4 flex items-center gap-4">
+            <Image
+              src="/assets/icons/photo.svg"
+              alt="coins"
+              width={50}
+              height={50}
+              className="size-9 md:size-12"
+            />
+            <h2 className="h2-bold text-dark-600">{images?.data?.length}</h2>
+          </div>
+        </div>
+      </section>
+
+      <section className="mt-8 md:mt-14">
+        <Collection
+          images={images?.data}
+          totalPages={images?.totalPages}
+          page={page}
+        />
+      </section>
+
+      <div className="mt-6">
+        <Button className="m-2" onClick={logoutHandler}>
+          Logout
+        </Button>
+        <Button className="m-2" onClick={deleteHandler}>
+          Delete
+        </Button>
+      </div>
+
     </>
   );
 };

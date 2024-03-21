@@ -2,12 +2,17 @@
 
 import { revalidatePath } from "next/cache";
 import { connectToDatabase } from "../database/mongoose";
-import { handleError } from "../utils";
+import { handleError, toBase64 } from "../utils";
 import User from "../database/models/user.model";
 import Image from "../database/models/image.model";
 import { redirect } from "next/navigation";
 
 import { v2 as cloudinary } from 'cloudinary'
+//import { ObjectId } from "mongoose";
+//import { ObjectId } from 'bson';
+//import { ObjectId } from 'bson'
+
+var ObjectId = require('mongodb').ObjectID;
 
 const populateUser = (query: any) => query.populate({
   path: 'author',
@@ -156,29 +161,30 @@ export async function getAllImages({ limit = 9, page = 1, searchQuery = '' }: {
   export async function getUserImages({
     limit = 9,
     page = 1,
-    userEmail,
+    userId,
   }: {
     limit?: number;
     page: number;
-    userEmail: string;
+    userId: string;
   }) {
     try {
       await connectToDatabase();
   
       const skipAmount = (Number(page) - 1) * limit;
-  
-      const images = await populateUser(Image.find({ author: userEmail }))
+      //const objectId = new ObjectId(userId.trim())
+      //const objectId = new ObjectId(userId.trim());
+      const images = await populateUser(Image.find({ author: userId }))
         .sort({ updatedAt: -1 })
         .skip(skipAmount)
         .limit(limit);
-  
-      const totalImages = await Image.find({ author: userEmail }).countDocuments();
+        
+      const totalImages = await Image.find({ author: userId }).countDocuments();
   
       return {
         data: JSON.parse(JSON.stringify(images)),
         totalPages: Math.ceil(totalImages / limit),
       };
     } catch (error) {
-      handleError(error);
+      console.log(error);
     }
   }

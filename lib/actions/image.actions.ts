@@ -168,8 +168,6 @@ export async function getAllImages({ limit = 9, page = 1, searchQuery = '' }: {
       await connectToDatabase();
   
       const skipAmount = (Number(page) - 1) * limit;
-      //const objectId = new ObjectId(userId.trim())
-      //const objectId = new ObjectId(userId.trim());
       const images = await populateUser(Image.find({ author: userId }))
         .sort({ updatedAt: -1 })
         .skip(skipAmount)

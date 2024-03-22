@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 
 
-const page = () => {
+const Signup = () => {
 
   const [user, setUser] = useState({
       firstName : "",
@@ -45,4 +45,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Signup

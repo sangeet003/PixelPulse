@@ -38,7 +38,7 @@ const CreditPage = () => {
       <section>
         <ul className="grid grid-cols-3 gap-12 mt-6 py-8 px-14">
           {plans.map((plan) => (
-            <li>
+            <li key={plan._id}>
               <Card className="object-center rounded-lg  bg-slate-100">
                 <CardHeader className="m-2 text-center">
                   <Image
@@ -63,8 +63,8 @@ const CreditPage = () => {
                 </CardHeader>
                 <CardContent>
                   <ul>
-                    {plan.inclusions.map((inclusion) => (
-                      <li className="text-gray-400 text-sm font-medium flex items-center gap-4 p-2">
+                    {plan.inclusions.map((inclusion, index) => (
+                      <li className="text-gray-400 text-sm font-medium flex items-center gap-4 p-2" key={index}>
                         <Image
                           src={`/assets/icons/${
                             inclusion.isIncluded ? "check.svg" : "cross.svg"

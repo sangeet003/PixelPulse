@@ -5,7 +5,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import ImageDetails from "./component"
 
-const data = ({ params: { id } }: SearchParamProps) => {
+const Data = ({ params: { id } }: SearchParamProps) => {
 
     const [user, setUser] = useState({
         email : "",
@@ -50,4 +50,4 @@ const data = ({ params: { id } }: SearchParamProps) => {
     )
 }
 
-export default data
+export default Data

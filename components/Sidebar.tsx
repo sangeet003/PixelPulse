@@ -26,10 +26,10 @@ const Sidebar = () => {
       {/* <hr className="bg-gray-100 border-dashed"></hr> */}
       
       <div className='mt-2'>
-        {navLinks.slice(0,6).map((obj) => {
+        {navLinks.slice(0,6).map((obj, index) => {
             const isActive = obj.route === pathname; 
             return (
-              <div className='text-gray-200 mx-auto w-full px-3 py-1 block'>
+              <div className='text-gray-200 mx-auto w-full px-3 py-1 block' key={index}>
                 <Link href={obj.route} className={`w-full flex block px-3 py-2 text-base hover:bg-[#212121] rounded-md ${isActive && "bg-[#212121]"}`}>
                     <Image 
                       src={obj.icon}
@@ -47,10 +47,10 @@ const Sidebar = () => {
 
       
       <div className='mt-auto mb-3'>
-        {navLinks.slice(6).map((obj) => {
+        {navLinks.slice(6).map((obj, index) => {
                   const isActive = obj.route === pathname; 
                   return (
-                    <div className='text-gray-200 mx-auto w-full px-3 py-1 block'>
+                    <div className='text-gray-200 mx-auto w-full px-3 py-1 block' key={index}>
                       <Link href={obj.route} className={`w-full flex block px-3 py-2 text-base hover:bg-[#212121] rounded-md ${isActive && "bg-[#212121]"}`}>
                           <Image 
                             src={obj.icon}

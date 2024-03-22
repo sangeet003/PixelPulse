@@ -34,7 +34,7 @@ export async function checkoutCredits(transaction: CheckoutTransactionParams) {
     success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/profile`,
     cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/`,
   });
-
+  console.log(session);
   redirect(session.url!);
 }
 

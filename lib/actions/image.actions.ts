@@ -8,9 +8,6 @@ import Image from "../database/models/image.model";
 import { redirect } from "next/navigation";
 
 import { v2 as cloudinary } from 'cloudinary'
-//import { ObjectId } from "mongoose";
-//import { ObjectId } from 'bson';
-//import { ObjectId } from 'bson'
 
 var ObjectId = require('mongodb').ObjectID;
 
@@ -177,7 +174,7 @@ export async function getAllImages({ limit = 9, page = 1, searchQuery = '' }: {
         .sort({ updatedAt: -1 })
         .skip(skipAmount)
         .limit(limit);
-        
+
       const totalImages = await Image.find({ author: userId }).countDocuments();
   
       return {

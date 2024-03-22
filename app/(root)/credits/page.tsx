@@ -1,8 +1,10 @@
+"use client"
+
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { plans } from "@/constants";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   Card,
@@ -12,8 +14,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Checkout from "@/components/Checkout";
+import axios from "axios";
 
 const CreditPage = () => {
+
+  const [user, setUser] = useState({} as any);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      let response = await axios.get("/api/user");
+      setUser(response.data.user);
+    };
+    fetchData();
+  }, [setUser]);
   return (
     <>
       <Header
@@ -65,7 +79,22 @@ const CreditPage = () => {
                   </ul>
                 </CardContent>
                 <CardFooter>
-                  <Button className="w-full rounded-full m-2" style={{ backgroundColor: "#625de3" }}>Buy Credits</Button>
+                  {plan.name === "Free" ? (
+                    <Button
+                      className="w-full rounded-full m-2"
+                      //style={{ backgroundColor: "#625de3" }}
+                      variant={"outline"}
+                    >
+                      Free Credits
+                    </Button>
+                  ) : (
+                    <Checkout
+                      plan={plan.name}
+                      amount={plan.price}
+                      credits={plan.credits}
+                      buyerId={user._id}
+                    />
+                  )}
                 </CardFooter>
               </Card>
             </li>

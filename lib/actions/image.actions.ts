@@ -21,7 +21,6 @@ const populateUser = (query: any) => query.populate({
 export async function addImage({ image, userEmail, path }: AddImageParams) {
   try {
     await connectToDatabase();
-    console.log("hii")
     const author = await User.findOne({email : userEmail});
     console.log(author);
     if (!author) {

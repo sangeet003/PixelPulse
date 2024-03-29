@@ -72,7 +72,7 @@ const TransformedImage = ({
       ) : (
         <div className="media-uploader_cta">
           Transformed Image
-          {/* {isTransforming && (
+          {isTransforming && (
               <div className="transforming-loader">
                 <Image
                   src="/assets/icons/spinner.svg"
@@ -82,7 +82,7 @@ const TransformedImage = ({
                 />
                 <p className="text-white/80">Please wait...</p>
               </div>
-            )} */}
+            )}
         </div>
         
       )}

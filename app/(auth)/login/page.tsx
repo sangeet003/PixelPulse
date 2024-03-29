@@ -33,11 +33,17 @@ const Login = () => {
 
   return (
     <div className="flex w-full">
-        <form className="mx-auto mt-48 grid gap-3 items-center" onSubmit={onSubmitHandler}>
-            <h1 className='m-auto text-2xl p-2 font-medium'>Login</h1>
+        <form className="mx-auto mt-48 grid gap-5 items-center w-[20%]" onSubmit={onSubmitHandler}>
+            <h1 className='m-auto text-3xl font-bold p-2 font-medium mb-2'>Login</h1>
             <Input type="email" id="email" placeholder="Email" onChange={(e : any) => setUser({...user, email : e.target.value})}/>
             <Input type="password" id="password" placeholder="Password" onChange={(e : any) => setUser({...user, password : e.target.value})}/>
-            <Button type="submit">Submit</Button>
+            <div>
+              <Button type="submit" className='w-full mb-4'>Submit</Button>
+              <div className='flex text-[13px] mb-2 text-center mx-auto'>
+                <p className='ml-1 font-semibold'>Don't have an account?  </p>
+                <span className='ml-2 mr-1 text-blue-500 font-semibold'><a href="/signup">Sign Up</a></span>
+              </div>
+            </div>
         </form>
     </div>
   )

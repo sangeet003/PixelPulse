@@ -33,7 +33,7 @@ const Signup = () => {
 
   return (
     <div className="flex w-full">
-        <form className="mx-auto mt-48 grid gap-3 items-center" onSubmit={onSubmitHandler}>
+        <form className="mx-auto mt-48 grid gap-4 items-center w-[20%]" onSubmit={onSubmitHandler}>
             <h1 className='m-auto text-2xl p-3 font-medium'>Sign Up</h1>
             <Input type="text" id="first_name" placeholder="First Name" onChange={(e : any) => setUser({...user , firstName : e.target.value})}/>
             <Input type="text" id="last_name" placeholder="Last Name" onChange={(e : any) => setUser({...user, lastName : e.target.value})}/>

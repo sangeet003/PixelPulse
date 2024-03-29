@@ -27,16 +27,33 @@ const ProfilePage = ({ searchParams }: SearchParamProps) => {
 
   const [images, setImages] = useState([] as any);
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
+    setLoading(true);
     const fetchData = async () => {
       let response = await axios.post("/api/user/images", page);
       setUser(response.data.user);
       setImages(response.data.images);
+      setLoading(false);
     };
     fetchData();
   }, [setUser]);
   
   return (
+    loading ? 
+    (<>
+      <div className="flex h-full mx-auto">
+        <Image
+          src="/assets/icons/spinner.svg"
+          width={50}
+          height={50}
+          alt="spinner"
+          className='block my-auto mx-auto'
+        />
+        {/* <p className="text-white/80">Please wait...</p> */}
+      </div>
+    </>) :
     <>
       <Header title="Profile" subTitle="" />
 

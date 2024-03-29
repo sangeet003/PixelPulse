@@ -9,8 +9,6 @@ import { Button } from "@/components/ui/button";
 import { getImageById } from "@/lib/actions/image.actions";
 import { getImageSize } from "@/lib/utils";
 import { DeleteConfirmation } from "@/components/DeleteConfirmation";
-import { useEffect, useState } from "react";
-import axios from "axios";
 
 const ImageDetails = ({user, image} : any) => {
   
@@ -62,8 +60,8 @@ const ImageDetails = ({user, image} : any) => {
       <section className="mt-10 border-t border-dark-400/15">
         <div className="transformation-grid">
           {/* MEDIA UPLOADER */}
-          <div className="flex flex-col gap-4">
-            <h3 className="h3-bold text-dark-600">Original</h3>
+          <div className="flex flex-col">
+            <h1 className="h3-bold text-dark-600 font-bold text-xl my-[16px]">Original</h1>
 
             <Image
               width={getImageSize(image.transformationType, image, "width")}

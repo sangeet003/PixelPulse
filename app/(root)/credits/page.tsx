@@ -20,15 +20,32 @@ import axios from "axios";
 const CreditPage = () => {
 
   const [user, setUser] = useState({} as any);
+  const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
+    setLoading(true);
     const fetchData = async () => {
       let response = await axios.get("/api/user");
       setUser(response.data.user);
+      setLoading(false);
     };
     fetchData();
   }, [setUser]);
   return (
+    loading ? 
+    (<>
+      <div className="flex h-full mx-auto">
+        <Image
+          src="/assets/icons/spinner.svg"
+          width={50}
+          height={50}
+          alt="spinner"
+          className='block my-auto mx-auto'
+        />
+        {/* <p className="text-white/80">Please wait...</p> */}
+      </div>
+    </>) :
     <>
       <Header
         title="Buy Credits"

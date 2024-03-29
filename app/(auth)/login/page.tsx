@@ -40,7 +40,7 @@ const Login = () => {
             <div>
               <Button type="submit" className='w-full mb-4'>Submit</Button>
               <div className='flex text-[13px] mb-2 text-center mx-auto'>
-                <p className='ml-1 font-semibold'>Don't have an account?  </p>
+                <p className='ml-1 font-semibold'>Don&apos;t have an account?</p>
                 <span className='ml-2 mr-1 text-blue-500 font-semibold'><a href="/signup">Sign Up</a></span>
               </div>
             </div>

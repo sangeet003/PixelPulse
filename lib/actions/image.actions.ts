@@ -142,7 +142,7 @@ export async function getAllImages({ limit = 9, page = 1, searchQuery = '' }: {
       
       const totalImages = await Image.find(query).countDocuments();
       const savedImages = await Image.find().countDocuments();
-  
+      
       return {
         data: JSON.parse(JSON.stringify(images)),
         totalPage: Math.ceil(totalImages / limit),

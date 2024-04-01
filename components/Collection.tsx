@@ -18,6 +18,7 @@ import { formUrlQuery } from "@/lib/utils";
 import { Button } from "./ui/button";
 
 import { Search } from "./Search";
+import { revalidatePath } from "next/cache";
 
 export const Collection = ({
   hasSearch = false,

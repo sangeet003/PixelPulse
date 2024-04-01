@@ -23,7 +23,7 @@ const Home = ({ searchParams }: SearchParamProps) => {
       setLoading(false);
     }
     fetchData();
-  }, []);
+  }, [page, searchQuery]);
 
   return (
     loading ? 

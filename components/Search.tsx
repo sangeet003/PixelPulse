@@ -22,18 +22,11 @@ export const Search = () => {
         });
 
         router.push(newUrl, { scroll: false });
-      } else {
-        const newUrl = removeKeysFromQuery({
-          searchParams: searchParams.toString(),
-          keysToRemove: ["query"],
-        });
-
-        router.push(newUrl, { scroll: false });
       }
-    }, 300);
+    }, 1500);
 
     return () => clearTimeout(delayDebounceFn);
-  }, [router, searchParams, query]);
+  }, [query]);
 
   return (
     <div className="search ml-auto">
@@ -49,7 +42,7 @@ export const Search = () => {
         className="search-field"
         placeholder="Search"
         onChange={(e) => setQuery(e.target.value)}
-      />
+      ></ Input>
     </div>
   );
 };

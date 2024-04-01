@@ -33,6 +33,7 @@ const ProfilePage = ({ searchParams }: SearchParamProps) => {
     }
     await upload(obj, (link : any) => {
       setProfileImg(link);
+      router.refresh();
     })
   };
 
@@ -50,6 +51,11 @@ const ProfilePage = ({ searchParams }: SearchParamProps) => {
       let response = await axios.post("/api/user/images", page);
       setUser(response.data.user);
       setImages(response.data.images);
+      let res = await axios.get("api/user/avatar");
+      if(res.data)
+        {console.log(res.data);setProfileImg(res.data);}
+      else
+      setProfileImg('/assets/images/profilePlaceholder.png');
       setLoading(false);
     };
     fetchData();

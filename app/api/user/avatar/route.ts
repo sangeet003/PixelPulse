@@ -1,4 +1,6 @@
 import {PutObjectCommand, S3Client} from "@aws-sdk/client-s3";
+import jwt from "jsonwebtoken";
+import { revalidatePath } from "next/cache";
 
 export async function POST(req : any) {
   const formData = await req.formData();
@@ -34,4 +36,23 @@ export async function POST(req : any) {
 
     return Response.json(link);
   }
+}
+
+export async function GET(req : any) {
+
+    const token = (req.cookies.get("token"));
+
+    if (!token) {
+        return Response.json({ error: "Token not found" }, { status: 400 });
+    }
+
+    const decodedToken = jwt.verify(token.value, process.env.TOKEN_SECRET!); 
+    const email = (decodedToken as any).email;
+
+    const ext = 'png';
+    const newFilename = email + '.' + ext;
+    const bucketName = process.env.BUCKET_NAME;
+    const link = `https://${bucketName}.s3.amazonaws.com/${newFilename}`;
+
+    return Response.json(link);
 }

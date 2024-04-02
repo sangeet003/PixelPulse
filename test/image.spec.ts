@@ -6,15 +6,16 @@ import Image from "../lib/database/models/image.model";
 import sinon from "sinon";
 import * as db from "../lib/database/mongoose";
 
+const sandbox = sinon.createSandbox();
+const fake = sinon.fake.resolves(true);
+sandbox.replaceGetter(db, 'connectToDatabase', () => fake);
+
 describe("this is test function", () => {
   it("test should return OK", () => {
     const output = testing();
     expect(output).toBe("OK");
   });
 });
-
-const sandbox = sinon.createSandbox();
-sinon.stub(db, 'connectToDatabase').callsFake(sinon.stub());
 
 describe("testing addImage action", () => {
 
